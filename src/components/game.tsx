@@ -1,6 +1,5 @@
 import React, { Component, ChangeEvent } from 'react'
 
-import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Container, Hero, Heading, Tile, Section, Footer, Content, Button } from 'react-bulma-components';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,6 +19,7 @@ export default class Game extends Component {
         gameId: "",
         enteredId: "",
         outcome: "no",
+        role: "",
     }
 
     ws = new WebSocket('ws://localhost:3000/socket');
@@ -60,12 +60,23 @@ export default class Game extends Component {
         }
 
         if (rawmsg.length > 3 && rawmsg.substring(0, 2) === "id") {
-            this.setState({ gameId: rawmsg.substring(3) })
+            this.setState({ gameId: rawmsg.substring(3) });
             return;
         }
 
         if (rawmsg.length > 9 && rawmsg.substring(0, 9) === "game over") {
-            this.setState({ outcome: rawmsg.substring(10) })
+            this.setState({ outcome: rawmsg.substring(10) });
+            return;
+        }
+
+        if (rawmsg.length > 5 && rawmsg.substring(0,5) === "error") {
+            alert(rawmsg);
+            return;
+        }
+
+        if (rawmsg.length > 4 && rawmsg.substring(0,4) === "role") {
+            console.log("new role:", rawmsg.substring(5))
+            this.setState({role: rawmsg.substring(5)})
             return;
         }
 
@@ -78,14 +89,9 @@ export default class Game extends Component {
         }
     }
 
-    enterLobby(mode: string) {
-        this.ws.send("start " + mode + " multi");
-        this.setState({ lobby: true, gameMode: mode, gameId: "test", started: true })
-    }
-
-    startChess1Device() {
-        this.ws.send("start chess single");
-        this.setState({ started: true });
+    startGame(mode: string) {
+        this.ws.send("start " + mode);
+        this.setState({ lobby: true, gameMode: mode, gameId: "not received", started: true })
     }
 
     joinGame() {
@@ -121,7 +127,7 @@ export default class Game extends Component {
                         {results}
                     </div>
                     <div className="Game">
-                        <Board fen={this.state.fen} moves={this.state.moves} makeMove={(move: string) => this.ws.send("move " + move)} />
+                        <Board fen={this.state.fen} moves={this.state.moves} makeMove={(move: string) => this.ws.send("move " + move)} role={this.state.role} />
                     </div>
                 </div>
             )
@@ -151,12 +157,12 @@ export default class Game extends Component {
                                     <Heading subtitle>Nach Standard Regeln</Heading>
                                     <Tile kind="ancestor">
                                         <Tile kind="parent">
-                                            <Tile renderAs="article" kind="child" notification color="info" className="Link" onClick={() => this.startChess1Device()}>
+                                            <Tile renderAs="article" kind="child" notification color="info" className="Link" onClick={() => this.startGame("chess single")}>
                                                 <Heading subtitle>Mit einem Gerät</Heading>
                                             </Tile>
                                         </Tile>
                                         <Tile kind="parent">
-                                            <Tile renderAs="article" kind="child" notification color="info" className="Link" onClick={() => this.enterLobby("chess")}>
+                                            <Tile renderAs="article" kind="child" notification color="info" className="Link" onClick={() => this.startGame("chess multi")}>
                                                 <Heading subtitle>Mit mehreren Geräten</Heading>
                                             </Tile>
                                         </Tile>
@@ -167,7 +173,7 @@ export default class Game extends Component {
                                     <Heading subtitle>Figuren des Gegners sind nicht sichtbar</Heading>
                                     <Tile kind="ancestor">
                                         <Tile kind="parent">
-                                            <Tile renderAs="article" kind="child" notification color="info" className="Link" onClick={() => this.enterLobby("krieg")}>
+                                            <Tile renderAs="article" kind="child" notification color="info" className="Link" onClick={() => this.startGame("krieg")}>
                                                 <Heading subtitle>Mit mehreren Geräten</Heading>
                                             </Tile>
                                         </Tile>
@@ -182,27 +188,27 @@ export default class Game extends Component {
                                             <Heading subtitle>Mit einem Gerät</Heading>
                                             <Tile kind="ancestor">
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessr single")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessRook} /></Heading>
                                                     </Tile>
                                                 </Tile>
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessk single")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessKnight} /></Heading>
                                                     </Tile>
                                                 </Tile>
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessb single")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessBishop} /></Heading>
                                                     </Tile>
                                                 </Tile>
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessq single")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessQueen} /></Heading>
                                                     </Tile>
                                                 </Tile>
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessp single")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessPawn} /></Heading>
                                                     </Tile>
                                                 </Tile>
@@ -213,28 +219,28 @@ export default class Game extends Component {
                                         <Tile renderAs="article" kind="child" notification color="warning">
                                             <Heading subtitle>Mit mehreren Geräten</Heading>
                                             <Tile kind="ancestor">
-                                                <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                            <Tile kind="parent">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessr multi")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessRook} /></Heading>
                                                     </Tile>
                                                 </Tile>
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessk multi")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessKnight} /></Heading>
                                                     </Tile>
                                                 </Tile>
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessb multi")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessBishop} /></Heading>
                                                     </Tile>
                                                 </Tile>
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessq multi")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessQueen} /></Heading>
                                                     </Tile>
                                                 </Tile>
                                                 <Tile kind="parent">
-                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link">
+                                                    <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessp multi")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessPawn} /></Heading>
                                                     </Tile>
                                                 </Tile>

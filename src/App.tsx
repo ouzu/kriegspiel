@@ -1,5 +1,6 @@
 import React from 'react';
 
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 import './App.scss';
 
 import Game from './components/game';

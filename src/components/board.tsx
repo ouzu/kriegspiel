@@ -117,6 +117,7 @@ interface IChessBoardProps {
     fen: string;
     moves: string[];
     makeMove: (move: string) => void;
+    role: string;
 }
 
 interface IChessBoardState {
@@ -232,24 +233,26 @@ export default class ChessBoard extends Component<IChessBoardProps, IChessBoardS
 
         var highlight = [["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",],]
 
-        if (this.state.phase === "done" || this.state.phase === "promote") {
-            return this.renderFen(this.state.newFen, highlight);
-        }
-
-        if (this.state.phase === "select") {
-            this.props.moves.forEach((v: string) => {
-                var pos = this.h.decodePosition(v);
-                highlight[pos[1]][pos[0]] = v;
-            })
-        } else if (this.state.phase === "move") {
-            this.props.moves.forEach((v: string) => {
-                if (v.substring(0, 2) === this.state.piece) {
-                    var pos = this.h.decodePosition(v.substring(2, 4));
+        if (this.props.role === "" || (this.props.role === "white" && this.isWhiteMove()) || (this.props.role === "black" && !this.isWhiteMove)) {
+            if (this.state.phase === "done" || this.state.phase === "promote") {
+                return this.renderFen(this.state.newFen, highlight);
+            }
+    
+            if (this.state.phase === "select") {
+                this.props.moves.forEach((v: string) => {
+                    var pos = this.h.decodePosition(v);
                     highlight[pos[1]][pos[0]] = v;
-                }
-            })
-            var pos = this.h.decodePosition(this.state.piece);
-            highlight[pos[1]][pos[0]] = "reset";
+                })
+            } else if (this.state.phase === "move") {
+                this.props.moves.forEach((v: string) => {
+                    if (v.substring(0, 2) === this.state.piece) {
+                        var pos = this.h.decodePosition(v.substring(2, 4));
+                        highlight[pos[1]][pos[0]] = v;
+                    }
+                })
+                var pos = this.h.decodePosition(this.state.piece);
+                highlight[pos[1]][pos[0]] = "reset";
+            }
         }
 
         return this.renderFen(this.props.fen, highlight)
