@@ -1,0 +1,101 @@
+$squareSize: 11vmin;
+$squareOpacity: 0.95;
+
+$highlightOpacity: 0.98;
+
+$highlightColor: #aaddff;
+$blackColor: #999;
+$whiteColor: #fff;
+
+.Link {
+  cursor: pointer;
+  >.subtitle {
+    margin: auto;
+    display: block;
+    >svg {
+      margin: auto;
+      display: block;    
+    }
+  }
+}
+
+#joinButton {
+  margin-left: 1rem;
+}
+
+.headerIcon {
+  width: 5rem !important;
+  height: 5rem !important;
+}
+
+.container>.title {
+  font-size: 3.5rem !important;
+}
+
+.Game {
+  display: flex;
+  flex-direction: row;
+
+  .ChessBoard {
+    margin: auto;
+
+    background: repeating-linear-gradient(45deg, #000, #000 10px, #fff 10px, #fff 20px);
+
+    .Row.Promotion {
+      background: #fff;
+      height: $squareSize;
+    }
+
+    .Row {
+      &:after {
+        clear: both;
+        content: "";
+        display: table;
+      }
+
+      .Square {
+        background: #fff;
+        border: none;
+        float: left;
+        font-size: $squareSize;
+        font-weight: bold;
+        line-height: $squareSize;
+        height: $squareSize;
+        //margin-right: -1px;
+        //margin-top: -1px;
+        padding: 0;
+        text-align: center;
+        width: $squareSize;
+
+        &.black {
+          background: rgba($blackColor, $squareOpacity);
+          color: #fff;
+        }
+
+        &.white {
+          background: rgba($whiteColor, $squareOpacity);
+        }
+
+        &.highlight {
+            cursor: pointer;
+        }
+
+        &.highlight.black {
+          background: rgba(mix($highlightColor, $blackColor, 50%), $highlightOpacity);
+        }
+
+        &.highlight.white {
+            background: rgba(mix($highlightColor, $whiteColor, 50%), $highlightOpacity);
+          }
+
+        .piece {
+          height: $squareSize;
+        }
+      }
+
+      .square:focus {
+        outline: none;
+      }
+    }
+  }
+}

@@ -2,8 +2,11 @@
   "name": "kriegspiel",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8000/",
   "dependencies": {
-    "@types/jest": "24.0.17",
+    "@fortawesome/fontawesome-svg-core": "^1.2.21",
+    "@fortawesome/free-solid-svg-icons": "^5.10.1",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "@types/node": "12.7.1",
     "@types/react": "16.9.1",
     "@types/react-dom": "16.8.5",
@@ -32,5 +35,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.17",
+    "@types/react-router-dom": "^4.3.4",
+    "node-sass": "^4.12.0",
+    "react-bulma-components": "^3.0.1-7",
+    "react-router-dom": "^5.0.1"
   }
 }
