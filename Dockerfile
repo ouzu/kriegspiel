@@ -1,10 +1,9 @@
-FROM golang:1.7.3 as builder
+FROM golang:1.14.1 as builder
 
 WORKDIR /go/src/git.laze.today/ouzu/kriegspiel/server
 
 COPY server .
 
-RUN go get ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server main.go
 
 FROM scratch
