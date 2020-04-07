@@ -233,7 +233,7 @@ export default class ChessBoard extends Component<IChessBoardProps, IChessBoardS
 
         var highlight = [["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",], ["", "", "", "", "", "", "", "",],]
 
-        if (this.props.role === "" || (this.props.role === "white" && this.isWhiteMove()) || (this.props.role === "black" && !this.isWhiteMove)) {
+        if (this.props.role === "" || (this.props.role === "white" && this.isWhiteMove()) || (this.props.role === "black" && !this.isWhiteMove())) {
             if (this.state.phase === "done" || this.state.phase === "promote") {
                 return this.renderFen(this.state.newFen, highlight);
             }

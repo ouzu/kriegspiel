@@ -1,6 +1,6 @@
 FROM golang:1.7.3 as builder
 
-WORKDIR /go/src/chess
+WORKDIR /go/src/git.laze.today/ouzu/kriegspiel/server
 
 COPY server .
 
@@ -9,7 +9,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server main.go
 
 FROM scratch
 
-COPY --from=builder /go/src/chess/server /server/server
+COPY --from=builder /go/src/git.laze.today/ouzu/kriegspiel/server/server /server/server
 COPY build/ /build
 
 EXPOSE 8000

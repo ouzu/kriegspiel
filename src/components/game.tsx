@@ -22,7 +22,9 @@ export default class Game extends Component {
         role: "",
     }
 
-    ws = new WebSocket('ws://localhost:3000/socket');
+    //ws = new WebSocket('wss://chess.mwalli.ch/socket');
+
+    ws = new WebSocket('ws://localhost:8000/socket');
 
     public componentDidMount() {
         this.ws.onmessage = (evt: MessageEvent) => {
@@ -40,12 +42,12 @@ export default class Game extends Component {
                 this.setState({ ConnectionMessage: "getrennt" });
             }
         }
-        
+
         if (window.location.href.split("#").length === 2) {
-            
+
             var interval = window.setInterval((handler: TimerHandler) => {
                 if (this.state.connected) {
-                    this.setState({enteredId: window.location.href.split('#')[1].substring(1)});
+                    this.setState({ enteredId: window.location.href.split('#')[1].substring(1) });
                     this.joinGame();
                     window.clearInterval(interval);
                 }
@@ -69,14 +71,14 @@ export default class Game extends Component {
             return;
         }
 
-        if (rawmsg.length > 5 && rawmsg.substring(0,5) === "error") {
+        if (rawmsg.length > 5 && rawmsg.substring(0, 5) === "error") {
             alert(rawmsg);
             return;
         }
 
-        if (rawmsg.length > 4 && rawmsg.substring(0,4) === "role") {
+        if (rawmsg.length > 4 && rawmsg.substring(0, 4) === "role") {
             console.log("new role:", rawmsg.substring(5))
-            this.setState({role: rawmsg.substring(5)})
+            this.setState({ role: rawmsg.substring(5) })
             return;
         }
 
@@ -219,7 +221,7 @@ export default class Game extends Component {
                                         <Tile renderAs="article" kind="child" notification color="warning">
                                             <Heading subtitle>Mit mehreren Geräten</Heading>
                                             <Tile kind="ancestor">
-                                            <Tile kind="parent">
+                                                <Tile kind="parent">
                                                     <Tile renderAs="article" kind="child" notification color="primary" className="Link" onClick={() => this.startGame("chessr multi")}>
                                                         <Heading subtitle><FontAwesomeIcon icon={faChessRook} /></Heading>
                                                     </Tile>
