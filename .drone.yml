@@ -1,0 +1,18 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build docker image
+  image: docker:latest
+  volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+  commands:
+      - docker build -t kriegspiel .
+
+volumes:
+  - name: docker_sock
+    host:
+      path: /var/run/docker.sock
