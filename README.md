@@ -1,3 +1,5 @@
+[![Build Status](https://ci.laze.today/api/badges/ouzu/kriegspiel/status.svg)](https://ci.laze.today/ouzu/kriegspiel)
+
 # Kriegspiel
 
 Kriegspiel ist eine Schachvariante, bei der jeder Spieler nur seine eigenen Figuren sieht (siehe [Wikipedia](https://en.wikipedia.org/wiki/Kriegspiel_(chess))).
